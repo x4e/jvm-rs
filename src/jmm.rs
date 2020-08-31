@@ -1,20 +1,13 @@
-#![allow(non_upper_case_globals)]
-#![allow(non_snake_case)]
-#![allow(non_camel_case_types)]
-#![allow(dead_code)]
-
-use jni::sys::{jint, jobject, JNINativeInterface_, jlong, jmethodID, jclass, jboolean, JNIEnv, jfieldID, jvalue, jfloat, jdouble, jchar, jstring, jobjectArray, jlongArray};
 use crate::bitfield::__BindgenBitfieldUnit;
+use jni::sys::{jvalue, jstring, jlong, jobjectArray, jint, jboolean, JNIEnv, jobject, jlongArray};
 
-pub const JMM_THREAD_STATE_FLAG_MASK: u32 = 4293918720;
 pub const JMM_VERSION_1: ::std::os::raw::c_uint = 536936448;
 pub const JMM_VERSION_1_0: ::std::os::raw::c_uint = 536936448;
 pub const JMM_VERSION_1_1: ::std::os::raw::c_uint = 536936704;
 pub const JMM_VERSION_1_2: ::std::os::raw::c_uint = 536936960;
 pub const JMM_VERSION_1_2_1: ::std::os::raw::c_uint = 536936961;
 pub const JMM_VERSION_1_2_2: ::std::os::raw::c_uint = 536936962;
-pub const JMM_VERSION_2: ::std::os::raw::c_uint = 537001984;
-pub const JMM_VERSION: ::std::os::raw::c_uint = 537001984;
+pub const JMM_VERSION: ::std::os::raw::c_uint = 536936963;
 
 #[repr(C)]
 #[repr(align(4))]
@@ -80,47 +73,58 @@ impl jmmOptionalSupport {
 		}
 	}
 	#[inline]
-	pub fn isObjectMonitorUsageSupported(&self) -> ::std::os::raw::c_uint {
+	pub fn isBootClassPathSupported(&self) -> ::std::os::raw::c_uint {
 		unsafe { ::std::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u32) }
 	}
 	#[inline]
-	pub fn set_isObjectMonitorUsageSupported(&mut self, val: ::std::os::raw::c_uint) {
+	pub fn set_isBootClassPathSupported(&mut self, val: ::std::os::raw::c_uint) {
 		unsafe {
 			let val: u32 = ::std::mem::transmute(val);
 			self._bitfield_1.set(5usize, 1u8, val as u64)
 		}
 	}
 	#[inline]
-	pub fn isSynchronizerUsageSupported(&self) -> ::std::os::raw::c_uint {
+	pub fn isObjectMonitorUsageSupported(&self) -> ::std::os::raw::c_uint {
 		unsafe { ::std::mem::transmute(self._bitfield_1.get(6usize, 1u8) as u32) }
 	}
 	#[inline]
-	pub fn set_isSynchronizerUsageSupported(&mut self, val: ::std::os::raw::c_uint) {
+	pub fn set_isObjectMonitorUsageSupported(&mut self, val: ::std::os::raw::c_uint) {
 		unsafe {
 			let val: u32 = ::std::mem::transmute(val);
 			self._bitfield_1.set(6usize, 1u8, val as u64)
 		}
 	}
 	#[inline]
-	pub fn isThreadAllocatedMemorySupported(&self) -> ::std::os::raw::c_uint {
+	pub fn isSynchronizerUsageSupported(&self) -> ::std::os::raw::c_uint {
 		unsafe { ::std::mem::transmute(self._bitfield_1.get(7usize, 1u8) as u32) }
 	}
 	#[inline]
-	pub fn set_isThreadAllocatedMemorySupported(&mut self, val: ::std::os::raw::c_uint) {
+	pub fn set_isSynchronizerUsageSupported(&mut self, val: ::std::os::raw::c_uint) {
 		unsafe {
 			let val: u32 = ::std::mem::transmute(val);
 			self._bitfield_1.set(7usize, 1u8, val as u64)
 		}
 	}
 	#[inline]
-	pub fn isRemoteDiagnosticCommandsSupported(&self) -> ::std::os::raw::c_uint {
+	pub fn isThreadAllocatedMemorySupported(&self) -> ::std::os::raw::c_uint {
 		unsafe { ::std::mem::transmute(self._bitfield_1.get(8usize, 1u8) as u32) }
+	}
+	#[inline]
+	pub fn set_isThreadAllocatedMemorySupported(&mut self, val: ::std::os::raw::c_uint) {
+		unsafe {
+			let val: u32 = ::std::mem::transmute(val);
+			self._bitfield_1.set(8usize, 1u8, val as u64)
+		}
+	}
+	#[inline]
+	pub fn isRemoteDiagnosticCommandsSupported(&self) -> ::std::os::raw::c_uint {
+		unsafe { ::std::mem::transmute(self._bitfield_1.get(9usize, 1u8) as u32) }
 	}
 	#[inline]
 	pub fn set_isRemoteDiagnosticCommandsSupported(&mut self, val: ::std::os::raw::c_uint) {
 		unsafe {
 			let val: u32 = ::std::mem::transmute(val);
-			self._bitfield_1.set(8usize, 1u8, val as u64)
+			self._bitfield_1.set(9usize, 1u8, val as u64)
 		}
 	}
 	#[inline]
@@ -130,6 +134,7 @@ impl jmmOptionalSupport {
 		isThreadContentionMonitoringSupported: ::std::os::raw::c_uint,
 		isCurrentThreadCpuTimeSupported: ::std::os::raw::c_uint,
 		isOtherThreadCpuTimeSupported: ::std::os::raw::c_uint,
+		isBootClassPathSupported: ::std::os::raw::c_uint,
 		isObjectMonitorUsageSupported: ::std::os::raw::c_uint,
 		isSynchronizerUsageSupported: ::std::os::raw::c_uint,
 		isThreadAllocatedMemorySupported: ::std::os::raw::c_uint,
@@ -163,21 +168,26 @@ impl jmmOptionalSupport {
 			isOtherThreadCpuTimeSupported as u64
 		});
 		__bindgen_bitfield_unit.set(5usize, 1u8, {
+			let isBootClassPathSupported: u32 =
+				unsafe { ::std::mem::transmute(isBootClassPathSupported) };
+			isBootClassPathSupported as u64
+		});
+		__bindgen_bitfield_unit.set(6usize, 1u8, {
 			let isObjectMonitorUsageSupported: u32 =
 				unsafe { ::std::mem::transmute(isObjectMonitorUsageSupported) };
 			isObjectMonitorUsageSupported as u64
 		});
-		__bindgen_bitfield_unit.set(6usize, 1u8, {
+		__bindgen_bitfield_unit.set(7usize, 1u8, {
 			let isSynchronizerUsageSupported: u32 =
 				unsafe { ::std::mem::transmute(isSynchronizerUsageSupported) };
 			isSynchronizerUsageSupported as u64
 		});
-		__bindgen_bitfield_unit.set(7usize, 1u8, {
+		__bindgen_bitfield_unit.set(8usize, 1u8, {
 			let isThreadAllocatedMemorySupported: u32 =
 				unsafe { ::std::mem::transmute(isThreadAllocatedMemorySupported) };
 			isThreadAllocatedMemorySupported as u64
 		});
-		__bindgen_bitfield_unit.set(8usize, 1u8, {
+		__bindgen_bitfield_unit.set(9usize, 1u8, {
 			let isRemoteDiagnosticCommandsSupported: u32 =
 				unsafe { ::std::mem::transmute(isRemoteDiagnosticCommandsSupported) };
 			isRemoteDiagnosticCommandsSupported as u64
@@ -262,7 +272,6 @@ pub const jmmVMGlobalOrigin_JMM_VMGLOBAL_ORIGIN_MANAGEMENT: jmmVMGlobalOrigin = 
 pub const jmmVMGlobalOrigin_JMM_VMGLOBAL_ORIGIN_ENVIRON_VAR: jmmVMGlobalOrigin = 4;
 pub const jmmVMGlobalOrigin_JMM_VMGLOBAL_ORIGIN_CONFIG_FILE: jmmVMGlobalOrigin = 5;
 pub const jmmVMGlobalOrigin_JMM_VMGLOBAL_ORIGIN_ERGONOMIC: jmmVMGlobalOrigin = 6;
-pub const jmmVMGlobalOrigin_JMM_VMGLOBAL_ORIGIN_ATTACH_ON_DEMAND: jmmVMGlobalOrigin = 7;
 pub const jmmVMGlobalOrigin_JMM_VMGLOBAL_ORIGIN_OTHER: jmmVMGlobalOrigin = 99;
 
 pub type jmmVMGlobalOrigin = ::std::os::raw::c_uint;
@@ -393,6 +402,7 @@ pub struct jmmInterface_1_ {
 	pub GetOptionalSupport: ::std::option::Option<
 		unsafe extern "C" fn(env: *mut JNIEnv, support_ptr: *mut jmmOptionalSupport) -> jint,
 	>,
+	pub GetInputArguments: ::std::option::Option<unsafe extern "C" fn(env: *mut JNIEnv) -> jobject>,
 	pub GetThreadInfo: ::std::option::Option<
 		unsafe extern "C" fn(
 			env: *mut JNIEnv,
@@ -401,6 +411,8 @@ pub struct jmmInterface_1_ {
 			infoArray: jobjectArray,
 		) -> jint,
 	>,
+	pub GetInputArgumentArray:
+	::std::option::Option<unsafe extern "C" fn(env: *mut JNIEnv) -> jobjectArray>,
 	pub GetMemoryPools:
 	::std::option::Option<unsafe extern "C" fn(env: *mut JNIEnv, mgr: jobject) -> jobjectArray>,
 	pub GetMemoryManagers: ::std::option::Option<
@@ -513,7 +525,6 @@ pub struct jmmInterface_1_ {
 			ids: jlongArray,
 			lockedMonitors: jboolean,
 			lockedSynchronizers: jboolean,
-			maxDepth: jint,
 		) -> jobjectArray,
 	>,
 	pub SetGCNotificationEnabled: ::std::option::Option<
