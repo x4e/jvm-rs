@@ -1,8 +1,0 @@
-[package]
-name = "RustJvmBindings"
-version = "0.1.0"
-authors = ["mastercooker <cookiedragon234@gmail.com>"]
-edition = "2018"
-
-[dependencies]
-jni = "0.17.0"

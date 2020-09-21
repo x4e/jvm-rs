@@ -3,7 +3,7 @@
 #![allow(non_camel_case_types)]
 #![allow(dead_code)]
 
-use jni::sys::{jint, jobject, JNINativeInterface_, jlong, jmethodID, jclass, jboolean, JNIEnv, jfieldID, jvalue, jfloat, jdouble, jchar};
+use crate::jni::{jint, jobject, JNINativeInterface_, jlong, jmethodID, jclass, jboolean, JNIEnv, jfieldID, jvalue, jfloat, jdouble, jchar};
 use crate::bitfield::__BindgenBitfieldUnit;
 
 pub const JVMTI_VERSION_1: _bindgen_ty_1 = 805371904;

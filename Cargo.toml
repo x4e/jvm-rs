@@ -1,0 +1,7 @@
+[package]
+name = "rs-jvm-bindings"
+version = "0.1.0"
+authors = ["mastercooker <c.o.okiedragon234@gmail.com>"]
+edition = "2018"
+
+[dependencies]

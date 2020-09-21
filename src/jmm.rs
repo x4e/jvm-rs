@@ -4,7 +4,7 @@
 #![allow(dead_code)]
 
 use crate::bitfield::__BindgenBitfieldUnit;
-use jni::sys::{jvalue, jstring, jlong, jobjectArray, jint, jboolean, JNIEnv, jobject, jlongArray};
+use crate::jni::{jvalue, jstring, jlong, jobjectArray, jint, jboolean, JNIEnv, jobject, jlongArray};
 
 pub const JMM_VERSION_1: ::std::os::raw::c_uint = 536936448;
 pub const JMM_VERSION_1_0: ::std::os::raw::c_uint = 536936448;
