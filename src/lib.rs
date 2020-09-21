@@ -4,3 +4,4 @@ pub mod jvm;
 pub mod jni;
 pub mod jvmti;
 pub mod jmm; 
+pub mod utils;
