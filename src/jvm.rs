@@ -1,60 +1,88 @@
 #![allow(non_upper_case_globals)]
-#![allow(non_snake_case)]
 #![allow(non_camel_case_types)]
+#![allow(non_snake_case)]
 #![allow(dead_code)]
 
-use crate::jni::{jint, jobject, JNINativeInterface_, jlong, jmethodID, jclass, jboolean, JNIEnv, jfieldID, jvalue, jfloat, jdouble, jchar, jstring, jobjectArray, jintArray, jbyte, jsize, jbyteArray};
-use crate::bitfield::__BindgenBitfieldUnit;
-use crate::misctypes::*;
+// to replace extern funs with weak:
+// find: extern "C" \{[\n\r\t ]*pub fn ([A-z_0-9]+)([()A-z0-9_,\n\r\t\->*: ]+);[\n\r\t ]*\}
+// replace: pub static $1: Weak<fn$2> = Weak::new("$1");
 
-pub const JVM_INTERFACE_VERSION: u32 = 4;
-pub const JVM_CALLER_DEPTH: i32 = -1;
-pub const JVM_TRACING_DTRACE_VERSION: u32 = 1;
-pub const JVM_CLASSFILE_MAJOR_VERSION: u32 = 52;
-pub const JVM_CLASSFILE_MINOR_VERSION: u32 = 0;
-pub const JVM_IO_ERR: i32 = -1;
-pub const JVM_IO_INTR: i32 = -2;
-pub const JVM_EEXIST: i32 = -100;
+use crate::jni::*;
+use crate::weak::Weak;
+use crate::varargs::__va_list_tag;
 
-extern "C" {
-	pub fn JVM_GetInterfaceVersion() -> jint;
+pub type size_t = ::std::os::raw::c_ulong;
+pub type __off_t = ::std::os::raw::c_long;
+pub type __off64_t = ::std::os::raw::c_long;
+
+pub type __FILE = _IO_FILE;
+pub type FILE = _IO_FILE;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _IO_marker {
+	_unused: [u8; 0],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _IO_codecvt {
+	_unused: [u8; 0],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _IO_wide_data {
+	_unused: [u8; 0],
+}
+pub type _IO_lock_t = ::std::os::raw::c_void;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _IO_FILE {
+	pub _flags: ::std::os::raw::c_int,
+	pub _IO_read_ptr: *mut ::std::os::raw::c_char,
+	pub _IO_read_end: *mut ::std::os::raw::c_char,
+	pub _IO_read_base: *mut ::std::os::raw::c_char,
+	pub _IO_write_base: *mut ::std::os::raw::c_char,
+	pub _IO_write_ptr: *mut ::std::os::raw::c_char,
+	pub _IO_write_end: *mut ::std::os::raw::c_char,
+	pub _IO_buf_base: *mut ::std::os::raw::c_char,
+	pub _IO_buf_end: *mut ::std::os::raw::c_char,
+	pub _IO_save_base: *mut ::std::os::raw::c_char,
+	pub _IO_backup_base: *mut ::std::os::raw::c_char,
+	pub _IO_save_end: *mut ::std::os::raw::c_char,
+	pub _markers: *mut _IO_marker,
+	pub _chain: *mut _IO_FILE,
+	pub _fileno: ::std::os::raw::c_int,
+	pub _flags2: ::std::os::raw::c_int,
+	pub _old_offset: __off_t,
+	pub _cur_column: ::std::os::raw::c_ushort,
+	pub _vtable_offset: ::std::os::raw::c_schar,
+	pub _shortbuf: [::std::os::raw::c_char; 1usize],
+	pub _lock: *mut _IO_lock_t,
+	pub _offset: __off64_t,
+	pub _codecvt: *mut _IO_codecvt,
+	pub _wide_data: *mut _IO_wide_data,
+	pub _freeres_list: *mut _IO_FILE,
+	pub _freeres_buf: *mut ::std::os::raw::c_void,
+	pub __pad5: size_t,
+	pub _mode: ::std::os::raw::c_int,
+	pub _unused2: [::std::os::raw::c_char; 20usize],
 }
 
-extern "C" {
-	#[doc = "PART 1: Functions for Native Libraries"]
-	pub fn JVM_IHashCode(env: *mut JNIEnv, obj: jobject) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_MonitorWait(env: *mut JNIEnv, obj: jobject, ms: jlong);
-}
-
-extern "C" {
-	pub fn JVM_MonitorNotify(env: *mut JNIEnv, obj: jobject);
-}
-
-extern "C" {
-	pub fn JVM_MonitorNotifyAll(env: *mut JNIEnv, obj: jobject);
-}
-
-extern "C" {
-	pub fn JVM_Clone(env: *mut JNIEnv, obj: jobject) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_InternString(env: *mut JNIEnv, str_: jstring) -> jstring;
-}
-
-extern "C" {
-	pub fn JVM_CurrentTimeMillis(env: *mut JNIEnv, ignored: jclass) -> jlong;
-}
-
-extern "C" {
-	pub fn JVM_NanoTime(env: *mut JNIEnv, ignored: jclass) -> jlong;
-}
-
-extern "C" {
-	pub fn JVM_ArrayCopy(
+pub static JVM_GetInterfaceVersion: Weak<fn() -> jint> = Weak::new("JVM_GetInterfaceVersion");
+#[doc = "PART 1: Functions for Native Libraries"]
+pub static JVM_IHashCode: Weak<fn(env: *mut JNIEnv, obj: jobject) -> jint> = Weak::new("JVM_IHashCode");
+pub static JVM_MonitorWait: Weak<fn(env: *mut JNIEnv, obj: jobject, ms: jlong)> = Weak::new("JVM_MonitorWait");
+pub static JVM_MonitorNotify: Weak<fn(env: *mut JNIEnv, obj: jobject)> = Weak::new("JVM_MonitorNotify");
+pub static JVM_MonitorNotifyAll: Weak<fn(env: *mut JNIEnv, obj: jobject)> = Weak::new("JVM_MonitorNotifyAll");
+pub static JVM_Clone: Weak<fn(env: *mut JNIEnv, obj: jobject) -> jobject> = Weak::new("JVM_Clone");
+pub static JVM_InternString: Weak<fn(env: *mut JNIEnv, str_: jstring) -> jstring> = Weak::new("JVM_InternString");
+pub static JVM_CurrentTimeMillis: Weak<fn(env: *mut JNIEnv, ignored: jclass) -> jlong> = Weak::new("JVM_CurrentTimeMillis");
+pub static JVM_NanoTime: Weak<fn(env: *mut JNIEnv, ignored: jclass) -> jlong> = Weak::new("JVM_NanoTime");
+pub static JVM_GetNanoTimeAdjustment: Weak<fn(
+		env: *mut JNIEnv,
+		ignored: jclass,
+		offset_secs: jlong,
+	) -> jlong> = Weak::new("JVM_GetNanoTimeAdjustment");
+pub static JVM_ArrayCopy: Weak<fn(
 		env: *mut JNIEnv,
 		ignored: jclass,
 		src: jobject,
@@ -62,359 +90,151 @@ extern "C" {
 		dst: jobject,
 		dst_pos: jint,
 		length: jint,
-	);
-}
-
-extern "C" {
-	pub fn JVM_InitProperties(env: *mut JNIEnv, p: jobject) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_OnExit(func: ::std::option::Option<unsafe extern "C" fn()>);
-}
-
-extern "C" {
-	pub fn JVM_Exit(code: jint);
-}
-
-extern "C" {
-	pub fn JVM_Halt(code: jint);
-}
-
-extern "C" {
-	pub fn JVM_GC();
-}
-
-extern "C" {
-	pub fn JVM_MaxObjectInspectionAge() -> jlong;
-}
-
-extern "C" {
-	pub fn JVM_TraceInstructions(on: jboolean);
-}
-
-extern "C" {
-	pub fn JVM_TraceMethodCalls(on: jboolean);
-}
-
-extern "C" {
-	pub fn JVM_TotalMemory() -> jlong;
-}
-
-extern "C" {
-	pub fn JVM_FreeMemory() -> jlong;
-}
-
-extern "C" {
-	pub fn JVM_MaxMemory() -> jlong;
-}
-
-extern "C" {
-	pub fn JVM_ActiveProcessorCount() -> jint;
-}
-
-extern "C" {
-	pub fn JVM_LoadLibrary(name: *const ::std::os::raw::c_char) -> *mut ::std::os::raw::c_void;
-}
-
-extern "C" {
-	pub fn JVM_UnloadLibrary(handle: *mut ::std::os::raw::c_void);
-}
-
-extern "C" {
-	pub fn JVM_FindLibraryEntry(
+	)> = Weak::new("JVM_ArrayCopy");
+pub static JVM_GetProperties: Weak<fn(env: *mut JNIEnv) -> jobjectArray> = Weak::new("JVM_GetProperties");
+pub static JVM_BeforeHalt: Weak<fn()> = Weak::new("JVM_BeforeHalt");
+pub static JVM_Halt: Weak<fn(code: jint)> = Weak::new("JVM_Halt");
+pub static JVM_GC: Weak<fn()> = Weak::new("JVM_GC");
+pub static JVM_MaxObjectInspectionAge: Weak<fn() -> jlong> = Weak::new("JVM_MaxObjectInspectionAge");
+pub static JVM_TotalMemory: Weak<fn() -> jlong> = Weak::new("JVM_TotalMemory");
+pub static JVM_FreeMemory: Weak<fn() -> jlong> = Weak::new("JVM_FreeMemory");
+pub static JVM_MaxMemory: Weak<fn() -> jlong> = Weak::new("JVM_MaxMemory");
+pub static JVM_ActiveProcessorCount: Weak<fn() -> jint> = Weak::new("JVM_ActiveProcessorCount");
+pub static JVM_LoadLibrary: Weak<fn(name: *const ::std::os::raw::c_char) -> *mut ::std::os::raw::c_void> = Weak::new("JVM_LoadLibrary");
+pub static JVM_UnloadLibrary: Weak<fn(handle: *mut ::std::os::raw::c_void)> = Weak::new("JVM_UnloadLibrary");
+pub static JVM_FindLibraryEntry: Weak<fn(
 		handle: *mut ::std::os::raw::c_void,
 		name: *const ::std::os::raw::c_char,
-	) -> *mut ::std::os::raw::c_void;
-}
-
-extern "C" {
-	pub fn JVM_IsSupportedJNIVersion(version: jint) -> jboolean;
-}
-
-extern "C" {
-	pub fn JVM_IsNaN(d: jdouble) -> jboolean;
-}
-
-extern "C" {
-	pub fn JVM_FillInStackTrace(env: *mut JNIEnv, throwable: jobject);
-}
-
-extern "C" {
-	pub fn JVM_GetStackTraceDepth(env: *mut JNIEnv, throwable: jobject) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_GetStackTraceElement(env: *mut JNIEnv, throwable: jobject, index: jint) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_InitializeCompiler(env: *mut JNIEnv, compCls: jclass);
-}
-
-extern "C" {
-	pub fn JVM_IsSilentCompiler(env: *mut JNIEnv, compCls: jclass) -> jboolean;
-}
-
-extern "C" {
-	pub fn JVM_CompileClass(env: *mut JNIEnv, compCls: jclass, cls: jclass) -> jboolean;
-}
-
-extern "C" {
-	pub fn JVM_CompileClasses(env: *mut JNIEnv, cls: jclass, jname: jstring) -> jboolean;
-}
-
-extern "C" {
-	pub fn JVM_CompilerCommand(env: *mut JNIEnv, compCls: jclass, arg: jobject) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_EnableCompiler(env: *mut JNIEnv, compCls: jclass);
-}
-
-extern "C" {
-	pub fn JVM_DisableCompiler(env: *mut JNIEnv, compCls: jclass);
-}
-
-extern "C" {
-	pub fn JVM_StartThread(env: *mut JNIEnv, thread: jobject);
-}
-
-extern "C" {
-	pub fn JVM_StopThread(env: *mut JNIEnv, thread: jobject, exception: jobject);
-}
-
-extern "C" {
-	pub fn JVM_IsThreadAlive(env: *mut JNIEnv, thread: jobject) -> jboolean;
-}
-
-extern "C" {
-	pub fn JVM_SuspendThread(env: *mut JNIEnv, thread: jobject);
-}
-
-extern "C" {
-	pub fn JVM_ResumeThread(env: *mut JNIEnv, thread: jobject);
-}
-
-extern "C" {
-	pub fn JVM_SetThreadPriority(env: *mut JNIEnv, thread: jobject, prio: jint);
-}
-
-extern "C" {
-	pub fn JVM_Yield(env: *mut JNIEnv, threadClass: jclass);
-}
-
-extern "C" {
-	pub fn JVM_Sleep(env: *mut JNIEnv, threadClass: jclass, millis: jlong);
-}
-
-extern "C" {
-	pub fn JVM_CurrentThread(env: *mut JNIEnv, threadClass: jclass) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_CountStackFrames(env: *mut JNIEnv, thread: jobject) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_Interrupt(env: *mut JNIEnv, thread: jobject);
-}
-
-extern "C" {
-	pub fn JVM_IsInterrupted(
+	) -> *mut ::std::os::raw::c_void> = Weak::new("JVM_FindLibraryEntry");
+pub static JVM_IsSupportedJNIVersion: Weak<fn(version: jint) -> jboolean> = Weak::new("JVM_IsSupportedJNIVersion");
+pub static JVM_GetVmArguments: Weak<fn(env: *mut JNIEnv) -> jobjectArray> = Weak::new("JVM_GetVmArguments");
+pub static JVM_InitializeFromArchive: Weak<fn(env: *mut JNIEnv, cls: jclass)> = Weak::new("JVM_InitializeFromArchive");
+pub static JVM_RegisterLambdaProxyClassForArchiving: Weak<fn(
 		env: *mut JNIEnv,
-		thread: jobject,
-		clearInterrupted: jboolean,
-	) -> jboolean;
-}
-
-extern "C" {
-	pub fn JVM_HoldsLock(env: *mut JNIEnv, threadClass: jclass, obj: jobject) -> jboolean;
-}
-
-extern "C" {
-	pub fn JVM_DumpAllStacks(env: *mut JNIEnv, unused: jclass);
-}
-
-extern "C" {
-	pub fn JVM_GetAllThreads(env: *mut JNIEnv, dummy: jclass) -> jobjectArray;
-}
-
-extern "C" {
-	pub fn JVM_SetNativeThreadName(env: *mut JNIEnv, jthread: jobject, name: jstring);
-}
-
-extern "C" {
-	pub fn JVM_DumpThreads(
+		caller: jclass,
+		invokedName: jstring,
+		invokedType: jobject,
+		methodType: jobject,
+		implMethodMember: jobject,
+		instantiatedMethodType: jobject,
+		lambdaProxyClass: jclass,
+	)> = Weak::new("JVM_RegisterLambdaProxyClassForArchiving");
+pub static JVM_LookupLambdaProxyClassFromArchive: Weak<fn(
+		env: *mut JNIEnv,
+		caller: jclass,
+		invokedName: jstring,
+		invokedType: jobject,
+		methodType: jobject,
+		implMethodMember: jobject,
+		instantiatedMethodType: jobject,
+		initialize: jboolean,
+	) -> jclass> = Weak::new("JVM_LookupLambdaProxyClassFromArchive");
+pub static JVM_IsCDSDumpingEnabled: Weak<fn(env: *mut JNIEnv) -> jboolean> = Weak::new("JVM_IsCDSDumpingEnabled");
+pub static JVM_IsCDSSharingEnabled: Weak<fn(env: *mut JNIEnv) -> jboolean> = Weak::new("JVM_IsCDSSharingEnabled");
+pub static JVM_GetRandomSeedForCDSDump: Weak<fn() -> jlong> = Weak::new("JVM_GetRandomSeedForCDSDump");
+pub static JVM_FillInStackTrace: Weak<fn(env: *mut JNIEnv, throwable: jobject)> = Weak::new("JVM_FillInStackTrace");
+pub static JVM_InitStackTraceElementArray: Weak<fn(
+		env: *mut JNIEnv,
+		elements: jobjectArray,
+		throwable: jobject,
+	)> = Weak::new("JVM_InitStackTraceElementArray");
+pub static JVM_InitStackTraceElement: Weak<fn(env: *mut JNIEnv, element: jobject, stackFrameInfo: jobject)> = Weak::new("JVM_InitStackTraceElement");
+pub static JVM_GetExtendedNPEMessage: Weak<fn(env: *mut JNIEnv, throwable: jthrowable) -> jstring> = Weak::new("JVM_GetExtendedNPEMessage");
+pub const JVM_STACKWALK_FILL_CLASS_REFS_ONLY: ::std::os::raw::c_uint = 2;
+pub const JVM_STACKWALK_GET_CALLER_CLASS: ::std::os::raw::c_uint = 4;
+pub const JVM_STACKWALK_SHOW_HIDDEN_FRAMES: ::std::os::raw::c_uint = 32;
+pub const JVM_STACKWALK_FILL_LIVE_STACK_FRAMES: ::std::os::raw::c_uint = 256;
+pub static JVM_CallStackWalk: Weak<fn(
+		env: *mut JNIEnv,
+		stackStream: jobject,
+		mode: jlong,
+		skip_frames: jint,
+		frame_count: jint,
+		start_index: jint,
+		frames: jobjectArray,
+	) -> jobject> = Weak::new("JVM_CallStackWalk");
+pub static JVM_MoreStackWalk: Weak<fn(
+		env: *mut JNIEnv,
+		stackStream: jobject,
+		mode: jlong,
+		anchor: jlong,
+		frame_count: jint,
+		start_index: jint,
+		frames: jobjectArray,
+	) -> jint> = Weak::new("JVM_MoreStackWalk");
+pub static JVM_StartThread: Weak<fn(env: *mut JNIEnv, thread: jobject)> = Weak::new("JVM_StartThread");
+pub static JVM_StopThread: Weak<fn(env: *mut JNIEnv, thread: jobject, exception: jobject)> = Weak::new("JVM_StopThread");
+pub static JVM_IsThreadAlive: Weak<fn(env: *mut JNIEnv, thread: jobject) -> jboolean> = Weak::new("JVM_IsThreadAlive");
+pub static JVM_SuspendThread: Weak<fn(env: *mut JNIEnv, thread: jobject)> = Weak::new("JVM_SuspendThread");
+pub static JVM_ResumeThread: Weak<fn(env: *mut JNIEnv, thread: jobject)> = Weak::new("JVM_ResumeThread");
+pub static JVM_SetThreadPriority: Weak<fn(env: *mut JNIEnv, thread: jobject, prio: jint)> = Weak::new("JVM_SetThreadPriority");
+pub static JVM_Yield: Weak<fn(env: *mut JNIEnv, threadClass: jclass)> = Weak::new("JVM_Yield");
+pub static JVM_Sleep: Weak<fn(env: *mut JNIEnv, threadClass: jclass, millis: jlong)> = Weak::new("JVM_Sleep");
+pub static JVM_CurrentThread: Weak<fn(env: *mut JNIEnv, threadClass: jclass) -> jobject> = Weak::new("JVM_CurrentThread");
+pub static JVM_Interrupt: Weak<fn(env: *mut JNIEnv, thread: jobject)> = Weak::new("JVM_Interrupt");
+pub static JVM_HoldsLock: Weak<fn(env: *mut JNIEnv, threadClass: jclass, obj: jobject) -> jboolean> = Weak::new("JVM_HoldsLock");
+pub static JVM_DumpAllStacks: Weak<fn(env: *mut JNIEnv, unused: jclass)> = Weak::new("JVM_DumpAllStacks");
+pub static JVM_GetAllThreads: Weak<fn(env: *mut JNIEnv, dummy: jclass) -> jobjectArray> = Weak::new("JVM_GetAllThreads");
+pub static JVM_SetNativeThreadName: Weak<fn(env: *mut JNIEnv, jthread: jobject, name: jstring)> = Weak::new("JVM_SetNativeThreadName");
+pub static JVM_DumpThreads: Weak<fn(
 		env: *mut JNIEnv,
 		threadClass: jclass,
 		threads: jobjectArray,
-	) -> jobjectArray;
-}
-
-extern "C" {
-	pub fn JVM_CurrentLoadedClass(env: *mut JNIEnv) -> jclass;
-}
-
-extern "C" {
-	pub fn JVM_CurrentClassLoader(env: *mut JNIEnv) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_GetClassContext(env: *mut JNIEnv) -> jobjectArray;
-}
-
-extern "C" {
-	pub fn JVM_ClassDepth(env: *mut JNIEnv, name: jstring) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_ClassLoaderDepth(env: *mut JNIEnv) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_GetSystemPackage(env: *mut JNIEnv, name: jstring) -> jstring;
-}
-
-extern "C" {
-	pub fn JVM_GetSystemPackages(env: *mut JNIEnv) -> jobjectArray;
-}
-
-extern "C" {
-	pub fn JVM_AllocateNewObject(
-		env: *mut JNIEnv,
-		obj: jobject,
-		currClass: jclass,
-		initClass: jclass,
-	) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_AllocateNewArray(
-		env: *mut JNIEnv,
-		obj: jobject,
-		currClass: jclass,
-		length: jint,
-	) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_LatestUserDefinedLoader(env: *mut JNIEnv) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_LoadClass0(
-		env: *mut JNIEnv,
-		obj: jobject,
-		currClass: jclass,
-		currClassName: jstring,
-	) -> jclass;
-}
-
-extern "C" {
-	pub fn JVM_GetArrayLength(env: *mut JNIEnv, arr: jobject) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_GetArrayElement(env: *mut JNIEnv, arr: jobject, index: jint) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_GetPrimitiveArrayElement(
+	) -> jobjectArray> = Weak::new("JVM_DumpThreads");
+pub static JVM_GetClassContext: Weak<fn(env: *mut JNIEnv) -> jobjectArray> = Weak::new("JVM_GetClassContext");
+pub static JVM_GetSystemPackage: Weak<fn(env: *mut JNIEnv, name: jstring) -> jstring> = Weak::new("JVM_GetSystemPackage");
+pub static JVM_GetSystemPackages: Weak<fn(env: *mut JNIEnv) -> jobjectArray> = Weak::new("JVM_GetSystemPackages");
+pub static JVM_GetAndClearReferencePendingList: Weak<fn(env: *mut JNIEnv) -> jobject> = Weak::new("JVM_GetAndClearReferencePendingList");
+pub static JVM_HasReferencePendingList: Weak<fn(env: *mut JNIEnv) -> jboolean> = Weak::new("JVM_HasReferencePendingList");
+pub static JVM_WaitForReferencePendingList: Weak<fn(env: *mut JNIEnv)> = Weak::new("JVM_WaitForReferencePendingList");
+pub static JVM_LatestUserDefinedLoader: Weak<fn(env: *mut JNIEnv) -> jobject> = Weak::new("JVM_LatestUserDefinedLoader");
+pub static JVM_GetArrayLength: Weak<fn(env: *mut JNIEnv, arr: jobject) -> jint> = Weak::new("JVM_GetArrayLength");
+pub static JVM_GetArrayElement: Weak<fn(env: *mut JNIEnv, arr: jobject, index: jint) -> jobject> = Weak::new("JVM_GetArrayElement");
+pub static JVM_GetPrimitiveArrayElement: Weak<fn(
 		env: *mut JNIEnv,
 		arr: jobject,
 		index: jint,
 		wCode: jint,
-	) -> jvalue;
-}
-
-extern "C" {
-	pub fn JVM_SetArrayElement(env: *mut JNIEnv, arr: jobject, index: jint, val: jobject);
-}
-
-extern "C" {
-	pub fn JVM_SetPrimitiveArrayElement(
+	) -> jvalue> = Weak::new("JVM_GetPrimitiveArrayElement");
+pub static JVM_SetArrayElement: Weak<fn(env: *mut JNIEnv, arr: jobject, index: jint, val: jobject)> = Weak::new("JVM_SetArrayElement");
+pub static JVM_SetPrimitiveArrayElement: Weak<fn(
 		env: *mut JNIEnv,
 		arr: jobject,
 		index: jint,
 		v: jvalue,
 		vCode: ::std::os::raw::c_uchar,
-	);
-}
-
-extern "C" {
-	pub fn JVM_NewArray(env: *mut JNIEnv, eltClass: jclass, length: jint) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_NewMultiArray(env: *mut JNIEnv, eltClass: jclass, dim: jintArray) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_GetCallerClass(env: *mut JNIEnv, depth: ::std::os::raw::c_int) -> jclass;
-}
-
-extern "C" {
-	pub fn JVM_FindPrimitiveClass(env: *mut JNIEnv, utf: *const ::std::os::raw::c_char) -> jclass;
-}
-
-extern "C" {
-	pub fn JVM_ResolveClass(env: *mut JNIEnv, cls: jclass);
-}
-
-extern "C" {
-	pub fn JVM_FindClassFromBootLoader(
+	)> = Weak::new("JVM_SetPrimitiveArrayElement");
+pub static JVM_NewArray: Weak<fn(env: *mut JNIEnv, eltClass: jclass, length: jint) -> jobject> = Weak::new("JVM_NewArray");
+pub static JVM_NewMultiArray: Weak<fn(env: *mut JNIEnv, eltClass: jclass, dim: jintArray) -> jobject> = Weak::new("JVM_NewMultiArray");
+pub static JVM_GetCallerClass: Weak<fn(env: *mut JNIEnv) -> jclass> = Weak::new("JVM_GetCallerClass");
+pub static JVM_FindPrimitiveClass: Weak<fn(env: *mut JNIEnv, utf: *const ::std::os::raw::c_char) -> jclass> = Weak::new("JVM_FindPrimitiveClass");
+pub static JVM_FindClassFromBootLoader: Weak<fn(
 		env: *mut JNIEnv,
 		name: *const ::std::os::raw::c_char,
-	) -> jclass;
-}
-
-extern "C" {
-	pub fn JVM_FindClassFromCaller(
+	) -> jclass> = Weak::new("JVM_FindClassFromBootLoader");
+pub static JVM_FindClassFromCaller: Weak<fn(
 		env: *mut JNIEnv,
 		name: *const ::std::os::raw::c_char,
 		init: jboolean,
 		loader: jobject,
 		caller: jclass,
-	) -> jclass;
-}
-
-extern "C" {
-	pub fn JVM_FindClassFromClassLoader(
-		env: *mut JNIEnv,
-		name: *const ::std::os::raw::c_char,
-		init: jboolean,
-		loader: jobject,
-		throwError: jboolean,
-	) -> jclass;
-}
-
-extern "C" {
-	pub fn JVM_FindClassFromClass(
+	) -> jclass> = Weak::new("JVM_FindClassFromCaller");
+pub static JVM_FindClassFromClass: Weak<fn(
 		env: *mut JNIEnv,
 		name: *const ::std::os::raw::c_char,
 		init: jboolean,
 		from: jclass,
-	) -> jclass;
-}
-
-extern "C" {
-	pub fn JVM_FindLoadedClass(env: *mut JNIEnv, loader: jobject, name: jstring) -> jclass;
-}
-
-extern "C" {
-	pub fn JVM_DefineClass(
+	) -> jclass> = Weak::new("JVM_FindClassFromClass");
+pub static JVM_FindLoadedClass: Weak<fn(env: *mut JNIEnv, loader: jobject, name: jstring) -> jclass> = Weak::new("JVM_FindLoadedClass");
+pub static JVM_DefineClass: Weak<fn(
 		env: *mut JNIEnv,
 		name: *const ::std::os::raw::c_char,
 		loader: jobject,
 		buf: *const jbyte,
 		len: jsize,
 		pd: jobject,
-	) -> jclass;
-}
-
-extern "C" {
-	pub fn JVM_DefineClassWithSource(
+	) -> jclass> = Weak::new("JVM_DefineClass");
+pub static JVM_DefineClassWithSource: Weak<fn(
 		env: *mut JNIEnv,
 		name: *const ::std::os::raw::c_char,
 		loader: jobject,
@@ -422,296 +242,207 @@ extern "C" {
 		len: jsize,
 		pd: jobject,
 		source: *const ::std::os::raw::c_char,
-	) -> jclass;
-}
-
-extern "C" {
-	pub fn JVM_GetClassName(env: *mut JNIEnv, cls: jclass) -> jstring;
-}
-
-extern "C" {
-	pub fn JVM_GetClassInterfaces(env: *mut JNIEnv, cls: jclass) -> jobjectArray;
-}
-
-extern "C" {
-	pub fn JVM_IsInterface(env: *mut JNIEnv, cls: jclass) -> jboolean;
-}
-
-extern "C" {
-	pub fn JVM_GetClassSigners(env: *mut JNIEnv, cls: jclass) -> jobjectArray;
-}
-
-extern "C" {
-	pub fn JVM_SetClassSigners(env: *mut JNIEnv, cls: jclass, signers: jobjectArray);
-}
-
-extern "C" {
-	pub fn JVM_GetProtectionDomain(env: *mut JNIEnv, cls: jclass) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_IsArrayClass(env: *mut JNIEnv, cls: jclass) -> jboolean;
-}
-
-extern "C" {
-	pub fn JVM_IsPrimitiveClass(env: *mut JNIEnv, cls: jclass) -> jboolean;
-}
-
-extern "C" {
-	pub fn JVM_GetComponentType(env: *mut JNIEnv, cls: jclass) -> jclass;
-}
-
-extern "C" {
-	pub fn JVM_GetClassModifiers(env: *mut JNIEnv, cls: jclass) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_GetDeclaredClasses(env: *mut JNIEnv, ofClass: jclass) -> jobjectArray;
-}
-
-extern "C" {
-	pub fn JVM_GetDeclaringClass(env: *mut JNIEnv, ofClass: jclass) -> jclass;
-}
-
-extern "C" {
-	pub fn JVM_GetClassSignature(env: *mut JNIEnv, cls: jclass) -> jstring;
-}
-
-extern "C" {
-	pub fn JVM_GetClassAnnotations(env: *mut JNIEnv, cls: jclass) -> jbyteArray;
-}
-
-extern "C" {
-	pub fn JVM_GetClassTypeAnnotations(env: *mut JNIEnv, cls: jclass) -> jbyteArray;
-}
-
-extern "C" {
-	pub fn JVM_GetFieldTypeAnnotations(env: *mut JNIEnv, field: jobject) -> jbyteArray;
-}
-
-extern "C" {
-	pub fn JVM_GetMethodTypeAnnotations(env: *mut JNIEnv, method: jobject) -> jbyteArray;
-}
-
-extern "C" {
-	pub fn JVM_GetClassDeclaredMethods(
+	) -> jclass> = Weak::new("JVM_DefineClassWithSource");
+pub static JVM_LookupDefineClass: Weak<fn(
+		env: *mut JNIEnv,
+		lookup: jclass,
+		name: *const ::std::os::raw::c_char,
+		buf: *const jbyte,
+		len: jsize,
+		pd: jobject,
+		init: jboolean,
+		flags: ::std::os::raw::c_int,
+		classData: jobject,
+	) -> jclass> = Weak::new("JVM_LookupDefineClass");
+pub static JVM_DefineModule: Weak<fn(
+		env: *mut JNIEnv,
+		module: jobject,
+		is_open: jboolean,
+		version: jstring,
+		location: jstring,
+		packages: jobjectArray,
+	)> = Weak::new("JVM_DefineModule");
+pub static JVM_SetBootLoaderUnnamedModule: Weak<fn(env: *mut JNIEnv, module: jobject)> = Weak::new("JVM_SetBootLoaderUnnamedModule");
+pub static JVM_AddModuleExports: Weak<fn(
+		env: *mut JNIEnv,
+		from_module: jobject,
+		package: jstring,
+		to_module: jobject,
+	)> = Weak::new("JVM_AddModuleExports");
+pub static JVM_AddModuleExportsToAllUnnamed: Weak<fn(
+		env: *mut JNIEnv,
+		from_module: jobject,
+		package: jstring,
+	)> = Weak::new("JVM_AddModuleExportsToAllUnnamed");
+pub static JVM_AddModuleExportsToAll: Weak<fn(env: *mut JNIEnv, from_module: jobject, package: jstring)> = Weak::new("JVM_AddModuleExportsToAll");
+pub static JVM_AddReadsModule: Weak<fn(env: *mut JNIEnv, from_module: jobject, source_module: jobject)> = Weak::new("JVM_AddReadsModule");
+pub static JVM_InitClassName: Weak<fn(env: *mut JNIEnv, cls: jclass) -> jstring> = Weak::new("JVM_InitClassName");
+pub static JVM_GetClassInterfaces: Weak<fn(env: *mut JNIEnv, cls: jclass) -> jobjectArray> = Weak::new("JVM_GetClassInterfaces");
+pub static JVM_IsInterface: Weak<fn(env: *mut JNIEnv, cls: jclass) -> jboolean> = Weak::new("JVM_IsInterface");
+pub static JVM_GetClassSigners: Weak<fn(env: *mut JNIEnv, cls: jclass) -> jobjectArray> = Weak::new("JVM_GetClassSigners");
+pub static JVM_SetClassSigners: Weak<fn(env: *mut JNIEnv, cls: jclass, signers: jobjectArray)> = Weak::new("JVM_SetClassSigners");
+pub static JVM_GetProtectionDomain: Weak<fn(env: *mut JNIEnv, cls: jclass) -> jobject> = Weak::new("JVM_GetProtectionDomain");
+pub static JVM_IsArrayClass: Weak<fn(env: *mut JNIEnv, cls: jclass) -> jboolean> = Weak::new("JVM_IsArrayClass");
+pub static JVM_IsPrimitiveClass: Weak<fn(env: *mut JNIEnv, cls: jclass) -> jboolean> = Weak::new("JVM_IsPrimitiveClass");
+pub static JVM_IsHiddenClass: Weak<fn(env: *mut JNIEnv, cls: jclass) -> jboolean> = Weak::new("JVM_IsHiddenClass");
+pub static JVM_GetClassModifiers: Weak<fn(env: *mut JNIEnv, cls: jclass) -> jint> = Weak::new("JVM_GetClassModifiers");
+pub static JVM_GetDeclaredClasses: Weak<fn(env: *mut JNIEnv, ofClass: jclass) -> jobjectArray> = Weak::new("JVM_GetDeclaredClasses");
+pub static JVM_GetDeclaringClass: Weak<fn(env: *mut JNIEnv, ofClass: jclass) -> jclass> = Weak::new("JVM_GetDeclaringClass");
+pub static JVM_GetSimpleBinaryName: Weak<fn(env: *mut JNIEnv, ofClass: jclass) -> jstring> = Weak::new("JVM_GetSimpleBinaryName");
+pub static JVM_GetClassSignature: Weak<fn(env: *mut JNIEnv, cls: jclass) -> jstring> = Weak::new("JVM_GetClassSignature");
+pub static JVM_GetClassAnnotations: Weak<fn(env: *mut JNIEnv, cls: jclass) -> jbyteArray> = Weak::new("JVM_GetClassAnnotations");
+pub static JVM_GetClassTypeAnnotations: Weak<fn(env: *mut JNIEnv, cls: jclass) -> jbyteArray> = Weak::new("JVM_GetClassTypeAnnotations");
+pub static JVM_GetFieldTypeAnnotations: Weak<fn(env: *mut JNIEnv, field: jobject) -> jbyteArray> = Weak::new("JVM_GetFieldTypeAnnotations");
+pub static JVM_GetMethodTypeAnnotations: Weak<fn(env: *mut JNIEnv, method: jobject) -> jbyteArray> = Weak::new("JVM_GetMethodTypeAnnotations");
+pub static JVM_GetClassDeclaredMethods: Weak<fn(
 		env: *mut JNIEnv,
 		ofClass: jclass,
 		publicOnly: jboolean,
-	) -> jobjectArray;
-}
-
-extern "C" {
-	pub fn JVM_GetClassDeclaredFields(
+	) -> jobjectArray> = Weak::new("JVM_GetClassDeclaredMethods");
+pub static JVM_GetClassDeclaredFields: Weak<fn(
 		env: *mut JNIEnv,
 		ofClass: jclass,
 		publicOnly: jboolean,
-	) -> jobjectArray;
-}
-
-extern "C" {
-	pub fn JVM_GetClassDeclaredConstructors(
+	) -> jobjectArray> = Weak::new("JVM_GetClassDeclaredFields");
+pub static JVM_GetClassDeclaredConstructors: Weak<fn(
 		env: *mut JNIEnv,
 		ofClass: jclass,
 		publicOnly: jboolean,
-	) -> jobjectArray;
-}
-
-extern "C" {
-	pub fn JVM_GetClassAccessFlags(env: *mut JNIEnv, cls: jclass) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_InvokeMethod(
+	) -> jobjectArray> = Weak::new("JVM_GetClassDeclaredConstructors");
+pub static JVM_GetClassAccessFlags: Weak<fn(env: *mut JNIEnv, cls: jclass) -> jint> = Weak::new("JVM_GetClassAccessFlags");
+pub static JVM_AreNestMates: Weak<fn(env: *mut JNIEnv, current: jclass, member: jclass) -> jboolean> = Weak::new("JVM_AreNestMates");
+pub static JVM_GetNestHost: Weak<fn(env: *mut JNIEnv, current: jclass) -> jclass> = Weak::new("JVM_GetNestHost");
+pub static JVM_GetNestMembers: Weak<fn(env: *mut JNIEnv, current: jclass) -> jobjectArray> = Weak::new("JVM_GetNestMembers");
+pub static JVM_IsRecord: Weak<fn(env: *mut JNIEnv, cls: jclass) -> jboolean> = Weak::new("JVM_IsRecord");
+pub static JVM_GetRecordComponents: Weak<fn(env: *mut JNIEnv, ofClass: jclass) -> jobjectArray> = Weak::new("JVM_GetRecordComponents");
+pub static JVM_GetPermittedSubclasses: Weak<fn(env: *mut JNIEnv, current: jclass) -> jobjectArray> = Weak::new("JVM_GetPermittedSubclasses");
+pub static JVM_InvokeMethod: Weak<fn(
 		env: *mut JNIEnv,
 		method: jobject,
 		obj: jobject,
 		args0: jobjectArray,
-	) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_NewInstanceFromConstructor(
+	) -> jobject> = Weak::new("JVM_InvokeMethod");
+pub static JVM_NewInstanceFromConstructor: Weak<fn(
 		env: *mut JNIEnv,
 		c: jobject,
 		args0: jobjectArray,
-	) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_GetClassConstantPool(env: *mut JNIEnv, cls: jclass) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_ConstantPoolGetSize(env: *mut JNIEnv, unused: jobject, jcpool: jobject) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_ConstantPoolGetClassAt(
+	) -> jobject> = Weak::new("JVM_NewInstanceFromConstructor");
+pub static JVM_GetClassConstantPool: Weak<fn(env: *mut JNIEnv, cls: jclass) -> jobject> = Weak::new("JVM_GetClassConstantPool");
+pub static JVM_ConstantPoolGetSize: Weak<fn(env: *mut JNIEnv, unused: jobject, jcpool: jobject) -> jint> = Weak::new("JVM_ConstantPoolGetSize");
+pub static JVM_ConstantPoolGetClassAt: Weak<fn(
 		env: *mut JNIEnv,
 		unused: jobject,
 		jcpool: jobject,
 		index: jint,
-	) -> jclass;
-}
-
-extern "C" {
-	pub fn JVM_ConstantPoolGetClassAtIfLoaded(
+	) -> jclass> = Weak::new("JVM_ConstantPoolGetClassAt");
+pub static JVM_ConstantPoolGetClassAtIfLoaded: Weak<fn(
 		env: *mut JNIEnv,
 		unused: jobject,
 		jcpool: jobject,
 		index: jint,
-	) -> jclass;
-}
-
-extern "C" {
-	pub fn JVM_ConstantPoolGetMethodAt(
+	) -> jclass> = Weak::new("JVM_ConstantPoolGetClassAtIfLoaded");
+pub static JVM_ConstantPoolGetClassRefIndexAt: Weak<fn(
+		env: *mut JNIEnv,
+		obj: jobject,
+		unused: jobject,
+		index: jint,
+	) -> jint> = Weak::new("JVM_ConstantPoolGetClassRefIndexAt");
+pub static JVM_ConstantPoolGetMethodAt: Weak<fn(
 		env: *mut JNIEnv,
 		unused: jobject,
 		jcpool: jobject,
 		index: jint,
-	) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_ConstantPoolGetMethodAtIfLoaded(
+	) -> jobject> = Weak::new("JVM_ConstantPoolGetMethodAt");
+pub static JVM_ConstantPoolGetMethodAtIfLoaded: Weak<fn(
 		env: *mut JNIEnv,
 		unused: jobject,
 		jcpool: jobject,
 		index: jint,
-	) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_ConstantPoolGetFieldAt(
+	) -> jobject> = Weak::new("JVM_ConstantPoolGetMethodAtIfLoaded");
+pub static JVM_ConstantPoolGetFieldAt: Weak<fn(
 		env: *mut JNIEnv,
 		unused: jobject,
 		jcpool: jobject,
 		index: jint,
-	) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_ConstantPoolGetFieldAtIfLoaded(
+	) -> jobject> = Weak::new("JVM_ConstantPoolGetFieldAt");
+pub static JVM_ConstantPoolGetFieldAtIfLoaded: Weak<fn(
 		env: *mut JNIEnv,
 		unused: jobject,
 		jcpool: jobject,
 		index: jint,
-	) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_ConstantPoolGetMemberRefInfoAt(
+	) -> jobject> = Weak::new("JVM_ConstantPoolGetFieldAtIfLoaded");
+pub static JVM_ConstantPoolGetMemberRefInfoAt: Weak<fn(
 		env: *mut JNIEnv,
 		unused: jobject,
 		jcpool: jobject,
 		index: jint,
-	) -> jobjectArray;
-}
-
-extern "C" {
-	pub fn JVM_ConstantPoolGetIntAt(
+	) -> jobjectArray> = Weak::new("JVM_ConstantPoolGetMemberRefInfoAt");
+pub static JVM_ConstantPoolGetNameAndTypeRefIndexAt: Weak<fn(
+		env: *mut JNIEnv,
+		obj: jobject,
+		unused: jobject,
+		index: jint,
+	) -> jint> = Weak::new("JVM_ConstantPoolGetNameAndTypeRefIndexAt");
+pub static JVM_ConstantPoolGetNameAndTypeRefInfoAt: Weak<fn(
+		env: *mut JNIEnv,
+		obj: jobject,
+		unused: jobject,
+		index: jint,
+	) -> jobjectArray> = Weak::new("JVM_ConstantPoolGetNameAndTypeRefInfoAt");
+pub static JVM_ConstantPoolGetIntAt: Weak<fn(
 		env: *mut JNIEnv,
 		unused: jobject,
 		jcpool: jobject,
 		index: jint,
-	) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_ConstantPoolGetLongAt(
+	) -> jint> = Weak::new("JVM_ConstantPoolGetIntAt");
+pub static JVM_ConstantPoolGetLongAt: Weak<fn(
 		env: *mut JNIEnv,
 		unused: jobject,
 		jcpool: jobject,
 		index: jint,
-	) -> jlong;
-}
-
-extern "C" {
-	pub fn JVM_ConstantPoolGetFloatAt(
+	) -> jlong> = Weak::new("JVM_ConstantPoolGetLongAt");
+pub static JVM_ConstantPoolGetFloatAt: Weak<fn(
 		env: *mut JNIEnv,
 		unused: jobject,
 		jcpool: jobject,
 		index: jint,
-	) -> jfloat;
-}
-
-extern "C" {
-	pub fn JVM_ConstantPoolGetDoubleAt(
+	) -> jfloat> = Weak::new("JVM_ConstantPoolGetFloatAt");
+pub static JVM_ConstantPoolGetDoubleAt: Weak<fn(
 		env: *mut JNIEnv,
 		unused: jobject,
 		jcpool: jobject,
 		index: jint,
-	) -> jdouble;
-}
-
-extern "C" {
-	pub fn JVM_ConstantPoolGetStringAt(
+	) -> jdouble> = Weak::new("JVM_ConstantPoolGetDoubleAt");
+pub static JVM_ConstantPoolGetStringAt: Weak<fn(
 		env: *mut JNIEnv,
 		unused: jobject,
 		jcpool: jobject,
 		index: jint,
-	) -> jstring;
-}
-
-extern "C" {
-	pub fn JVM_ConstantPoolGetUTF8At(
+	) -> jstring> = Weak::new("JVM_ConstantPoolGetStringAt");
+pub static JVM_ConstantPoolGetUTF8At: Weak<fn(
 		env: *mut JNIEnv,
 		unused: jobject,
 		jcpool: jobject,
 		index: jint,
-	) -> jstring;
-}
-
-extern "C" {
-	pub fn JVM_GetMethodParameters(env: *mut JNIEnv, method: jobject) -> jobjectArray;
-}
-
-extern "C" {
-	pub fn JVM_DoPrivileged(
+	) -> jstring> = Weak::new("JVM_ConstantPoolGetUTF8At");
+pub static JVM_ConstantPoolGetTagAt: Weak<fn(
 		env: *mut JNIEnv,
-		cls: jclass,
-		action: jobject,
-		context: jobject,
-		wrapException: jboolean,
-	) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_GetInheritedAccessControlContext(env: *mut JNIEnv, cls: jclass) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_GetStackAccessControlContext(env: *mut JNIEnv, cls: jclass) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_RegisterSignal(
+		unused: jobject,
+		jcpool: jobject,
+		index: jint,
+	) -> jbyte> = Weak::new("JVM_ConstantPoolGetTagAt");
+pub static JVM_GetMethodParameters: Weak<fn(env: *mut JNIEnv, method: jobject) -> jobjectArray> = Weak::new("JVM_GetMethodParameters");
+pub static JVM_GetInheritedAccessControlContext: Weak<fn(env: *mut JNIEnv, cls: jclass) -> jobject> = Weak::new("JVM_GetInheritedAccessControlContext");
+pub static JVM_GetStackAccessControlContext: Weak<fn(env: *mut JNIEnv, cls: jclass) -> jobject> = Weak::new("JVM_GetStackAccessControlContext");
+pub static JVM_RegisterSignal: Weak<fn(
 		sig: jint,
 		handler: *mut ::std::os::raw::c_void,
-	) -> *mut ::std::os::raw::c_void;
-}
-
-extern "C" {
-	pub fn JVM_RaiseSignal(sig: jint) -> jboolean;
-}
-
-extern "C" {
-	pub fn JVM_FindSignal(name: *const ::std::os::raw::c_char) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_DesiredAssertionStatus(env: *mut JNIEnv, unused: jclass, cls: jclass) -> jboolean;
-}
-
-extern "C" {
-	pub fn JVM_AssertionStatusDirectives(env: *mut JNIEnv, unused: jclass) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_SupportsCX8() -> jboolean;
-}
-
+	) -> *mut ::std::os::raw::c_void> = Weak::new("JVM_RegisterSignal");
+pub static JVM_RaiseSignal: Weak<fn(sig: jint) -> jboolean> = Weak::new("JVM_RaiseSignal");
+pub static JVM_FindSignal: Weak<fn(name: *const ::std::os::raw::c_char) -> jint> = Weak::new("JVM_FindSignal");
+pub static JVM_DesiredAssertionStatus: Weak<fn(env: *mut JNIEnv, unused: jclass, cls: jclass) -> jboolean> = Weak::new("JVM_DesiredAssertionStatus");
+pub static JVM_AssertionStatusDirectives: Weak<fn(env: *mut JNIEnv, unused: jclass) -> jobject> = Weak::new("JVM_AssertionStatusDirectives");
+pub static JVM_SupportsCX8: Weak<fn() -> jboolean> = Weak::new("JVM_SupportsCX8");
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct JVM_DTraceProbe {
@@ -720,7 +451,6 @@ pub struct JVM_DTraceProbe {
 	pub name: jstring,
 	pub reserved: [*mut ::std::os::raw::c_void; 4usize],
 }
-
 #[doc = " Encapsulates the stability ratings for a DTrace provider field"]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -729,7 +459,6 @@ pub struct JVM_DTraceInterfaceAttributes {
 	pub dataStability: jint,
 	pub dependencyClass: jint,
 }
-
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct JVM_DTraceProvider {
@@ -743,81 +472,40 @@ pub struct JVM_DTraceProvider {
 	pub argsAttributes: JVM_DTraceInterfaceAttributes,
 	pub reserved: [*mut ::std::os::raw::c_void; 4usize],
 }
-
-extern "C" {
-	pub fn JVM_DTraceGetVersion(env: *mut JNIEnv) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_DTraceActivate(
+pub static JVM_DTraceGetVersion: Weak<fn(env: *mut JNIEnv) -> jint> = Weak::new("JVM_DTraceGetVersion");
+pub static JVM_DTraceActivate: Weak<fn(
 		env: *mut JNIEnv,
 		version: jint,
 		module_name: jstring,
 		providers_count: jint,
 		providers: *mut JVM_DTraceProvider,
-	) -> jlong;
-}
-
-extern "C" {
-	pub fn JVM_DTraceIsProbeEnabled(env: *mut JNIEnv, method: jmethodID) -> jboolean;
-}
-
-extern "C" {
-	pub fn JVM_DTraceDispose(env: *mut JNIEnv, activation_handle: jlong);
-}
-
-extern "C" {
-	pub fn JVM_DTraceIsSupported(env: *mut JNIEnv) -> jboolean;
-}
-
+	) -> jlong> = Weak::new("JVM_DTraceActivate");
+pub static JVM_DTraceIsProbeEnabled: Weak<fn(env: *mut JNIEnv, method: jmethodID) -> jboolean> = Weak::new("JVM_DTraceIsProbeEnabled");
+pub static JVM_DTraceDispose: Weak<fn(env: *mut JNIEnv, activation_handle: jlong)> = Weak::new("JVM_DTraceDispose");
+pub static JVM_DTraceIsSupported: Weak<fn(env: *mut JNIEnv) -> jboolean> = Weak::new("JVM_DTraceIsSupported");
 extern "C" {
 	#[doc = "PART 2: Support for the Verifier and Class File Format Checker"]
 	pub fn JVM_GetClassNameUTF(env: *mut JNIEnv, cb: jclass) -> *const ::std::os::raw::c_char;
 }
-
-extern "C" {
-	pub fn JVM_GetClassCPTypes(env: *mut JNIEnv, cb: jclass, types: *mut ::std::os::raw::c_uchar);
-}
-
-extern "C" {
-	pub fn JVM_GetClassCPEntriesCount(env: *mut JNIEnv, cb: jclass) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_GetClassFieldsCount(env: *mut JNIEnv, cb: jclass) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_GetClassMethodsCount(env: *mut JNIEnv, cb: jclass) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_GetMethodIxExceptionIndexes(
+pub static JVM_GetClassCPTypes: Weak<fn(env: *mut JNIEnv, cb: jclass, types: *mut ::std::os::raw::c_uchar)> = Weak::new("JVM_GetClassCPTypes");
+pub static JVM_GetClassCPEntriesCount: Weak<fn(env: *mut JNIEnv, cb: jclass) -> jint> = Weak::new("JVM_GetClassCPEntriesCount");
+pub static JVM_GetClassFieldsCount: Weak<fn(env: *mut JNIEnv, cb: jclass) -> jint> = Weak::new("JVM_GetClassFieldsCount");
+pub static JVM_GetClassMethodsCount: Weak<fn(env: *mut JNIEnv, cb: jclass) -> jint> = Weak::new("JVM_GetClassMethodsCount");
+pub static JVM_GetMethodIxExceptionIndexes: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		method_index: jint,
 		exceptions: *mut ::std::os::raw::c_ushort,
-	);
-}
-
-extern "C" {
-	pub fn JVM_GetMethodIxExceptionsCount(env: *mut JNIEnv, cb: jclass, method_index: jint)
-	                                      -> jint;
-}
-
-extern "C" {
-	pub fn JVM_GetMethodIxByteCode(
+	)> = Weak::new("JVM_GetMethodIxExceptionIndexes");
+pub static JVM_GetMethodIxExceptionsCount: Weak<fn(env: *mut JNIEnv, cb: jclass, method_index: jint)
+	                                      -> jint> = Weak::new("JVM_GetMethodIxExceptionsCount");
+pub static JVM_GetMethodIxByteCode: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		method_index: jint,
 		code: *mut ::std::os::raw::c_uchar,
-	);
-}
-
-extern "C" {
-	pub fn JVM_GetMethodIxByteCodeLength(env: *mut JNIEnv, cb: jclass, method_index: jint) -> jint;
-}
-
+	)> = Weak::new("JVM_GetMethodIxByteCode");
+pub static JVM_GetMethodIxByteCodeLength: Weak<fn(env: *mut JNIEnv, cb: jclass, method_index: jint) -> jint> = Weak::new("JVM_GetMethodIxByteCodeLength");
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct JVM_ExceptionTableEntryType {
@@ -826,179 +514,112 @@ pub struct JVM_ExceptionTableEntryType {
 	pub handler_pc: jint,
 	pub catchType: jint,
 }
-
-extern "C" {
-	pub fn JVM_GetMethodIxExceptionTableEntry(
+pub static JVM_GetMethodIxExceptionTableEntry: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		method_index: jint,
 		entry_index: jint,
 		entry: *mut JVM_ExceptionTableEntryType,
-	);
-}
-
-extern "C" {
-	pub fn JVM_GetMethodIxExceptionTableLength(
+	)> = Weak::new("JVM_GetMethodIxExceptionTableEntry");
+pub static JVM_GetMethodIxExceptionTableLength: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		index: ::std::os::raw::c_int,
-	) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_GetFieldIxModifiers(
+	) -> jint> = Weak::new("JVM_GetMethodIxExceptionTableLength");
+pub static JVM_GetFieldIxModifiers: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		index: ::std::os::raw::c_int,
-	) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_GetMethodIxModifiers(
+	) -> jint> = Weak::new("JVM_GetFieldIxModifiers");
+pub static JVM_GetMethodIxModifiers: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		index: ::std::os::raw::c_int,
-	) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_GetMethodIxLocalsCount(
+	) -> jint> = Weak::new("JVM_GetMethodIxModifiers");
+pub static JVM_GetMethodIxLocalsCount: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		index: ::std::os::raw::c_int,
-	) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_GetMethodIxArgsSize(
+	) -> jint> = Weak::new("JVM_GetMethodIxLocalsCount");
+pub static JVM_GetMethodIxArgsSize: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		index: ::std::os::raw::c_int,
-	) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_GetMethodIxMaxStack(
+	) -> jint> = Weak::new("JVM_GetMethodIxArgsSize");
+pub static JVM_GetMethodIxMaxStack: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		index: ::std::os::raw::c_int,
-	) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_IsConstructorIx(
+	) -> jint> = Weak::new("JVM_GetMethodIxMaxStack");
+pub static JVM_IsConstructorIx: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		index: ::std::os::raw::c_int,
-	) -> jboolean;
-}
-
-extern "C" {
-	pub fn JVM_IsVMGeneratedMethodIx(
+	) -> jboolean> = Weak::new("JVM_IsConstructorIx");
+pub static JVM_IsVMGeneratedMethodIx: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		index: ::std::os::raw::c_int,
-	) -> jboolean;
-}
-
-extern "C" {
-	pub fn JVM_GetMethodIxNameUTF(
+	) -> jboolean> = Weak::new("JVM_IsVMGeneratedMethodIx");
+pub static JVM_GetMethodIxNameUTF: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		index: jint,
-	) -> *const ::std::os::raw::c_char;
-}
-
-extern "C" {
-	pub fn JVM_GetMethodIxSignatureUTF(
+	) -> *const ::std::os::raw::c_char> = Weak::new("JVM_GetMethodIxNameUTF");
+pub static JVM_GetMethodIxSignatureUTF: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		index: jint,
-	) -> *const ::std::os::raw::c_char;
-}
-
-extern "C" {
-	pub fn JVM_GetCPFieldNameUTF(
+	) -> *const ::std::os::raw::c_char> = Weak::new("JVM_GetMethodIxSignatureUTF");
+pub static JVM_GetCPFieldNameUTF: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		index: jint,
-	) -> *const ::std::os::raw::c_char;
-}
-
-extern "C" {
-	pub fn JVM_GetCPMethodNameUTF(
+	) -> *const ::std::os::raw::c_char> = Weak::new("JVM_GetCPFieldNameUTF");
+pub static JVM_GetCPMethodNameUTF: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		index: jint,
-	) -> *const ::std::os::raw::c_char;
-}
-
-extern "C" {
-	pub fn JVM_GetCPMethodSignatureUTF(
+	) -> *const ::std::os::raw::c_char> = Weak::new("JVM_GetCPMethodNameUTF");
+pub static JVM_GetCPMethodSignatureUTF: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		index: jint,
-	) -> *const ::std::os::raw::c_char;
-}
-
-extern "C" {
-	pub fn JVM_GetCPFieldSignatureUTF(
+	) -> *const ::std::os::raw::c_char> = Weak::new("JVM_GetCPMethodSignatureUTF");
+pub static JVM_GetCPFieldSignatureUTF: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		index: jint,
-	) -> *const ::std::os::raw::c_char;
-}
-
-extern "C" {
-	pub fn JVM_GetCPClassNameUTF(
+	) -> *const ::std::os::raw::c_char> = Weak::new("JVM_GetCPFieldSignatureUTF");
+pub static JVM_GetCPClassNameUTF: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		index: jint,
-	) -> *const ::std::os::raw::c_char;
-}
-
-extern "C" {
-	pub fn JVM_GetCPFieldClassNameUTF(
+	) -> *const ::std::os::raw::c_char> = Weak::new("JVM_GetCPClassNameUTF");
+pub static JVM_GetCPFieldClassNameUTF: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		index: jint,
-	) -> *const ::std::os::raw::c_char;
-}
-
-extern "C" {
-	pub fn JVM_GetCPMethodClassNameUTF(
+	) -> *const ::std::os::raw::c_char> = Weak::new("JVM_GetCPFieldClassNameUTF");
+pub static JVM_GetCPMethodClassNameUTF: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		index: jint,
-	) -> *const ::std::os::raw::c_char;
-}
-
-extern "C" {
-	pub fn JVM_GetCPFieldModifiers(
+	) -> *const ::std::os::raw::c_char> = Weak::new("JVM_GetCPMethodClassNameUTF");
+pub static JVM_GetCPFieldModifiers: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		index: ::std::os::raw::c_int,
 		calledClass: jclass,
-	) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_GetCPMethodModifiers(
+	) -> jint> = Weak::new("JVM_GetCPFieldModifiers");
+pub static JVM_GetCPMethodModifiers: Weak<fn(
 		env: *mut JNIEnv,
 		cb: jclass,
 		index: ::std::os::raw::c_int,
 		calledClass: jclass,
-	) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_ReleaseUTF(utf: *const ::std::os::raw::c_char);
-}
-
-extern "C" {
-	pub fn JVM_IsSameClassPackage(env: *mut JNIEnv, class1: jclass, class2: jclass) -> jboolean;
-}
-
+	) -> jint> = Weak::new("JVM_GetCPMethodModifiers");
+pub static JVM_ReleaseUTF: Weak<fn(utf: *const ::std::os::raw::c_char)> = Weak::new("JVM_ReleaseUTF");
+pub static JVM_IsSameClassPackage: Weak<fn(env: *mut JNIEnv, class1: jclass, class2: jclass) -> jboolean> = Weak::new("JVM_IsSameClassPackage");
 pub const JVM_ACC_PUBLIC: ::std::os::raw::c_uint = 1;
 pub const JVM_ACC_PRIVATE: ::std::os::raw::c_uint = 2;
 pub const JVM_ACC_PROTECTED: ::std::os::raw::c_uint = 4;
@@ -1017,6 +638,7 @@ pub const JVM_ACC_STRICT: ::std::os::raw::c_uint = 2048;
 pub const JVM_ACC_SYNTHETIC: ::std::os::raw::c_uint = 4096;
 pub const JVM_ACC_ANNOTATION: ::std::os::raw::c_uint = 8192;
 pub const JVM_ACC_ENUM: ::std::os::raw::c_uint = 16384;
+pub const JVM_ACC_MODULE: ::std::os::raw::c_uint = 32768;
 pub const JVM_T_BOOLEAN: ::std::os::raw::c_uint = 4;
 pub const JVM_T_CHAR: ::std::os::raw::c_uint = 5;
 pub const JVM_T_FLOAT: ::std::os::raw::c_uint = 6;
@@ -1039,7 +661,11 @@ pub const JVM_CONSTANT_InterfaceMethodref: ::std::os::raw::c_uint = 11;
 pub const JVM_CONSTANT_NameAndType: ::std::os::raw::c_uint = 12;
 pub const JVM_CONSTANT_MethodHandle: ::std::os::raw::c_uint = 15;
 pub const JVM_CONSTANT_MethodType: ::std::os::raw::c_uint = 16;
+pub const JVM_CONSTANT_Dynamic: ::std::os::raw::c_uint = 17;
 pub const JVM_CONSTANT_InvokeDynamic: ::std::os::raw::c_uint = 18;
+pub const JVM_CONSTANT_Module: ::std::os::raw::c_uint = 19;
+pub const JVM_CONSTANT_Package: ::std::os::raw::c_uint = 20;
+pub const JVM_CONSTANT_ExternalMax: ::std::os::raw::c_uint = 20;
 pub const JVM_REF_getField: ::std::os::raw::c_uint = 1;
 pub const JVM_REF_getStatic: ::std::os::raw::c_uint = 2;
 pub const JVM_REF_putField: ::std::os::raw::c_uint = 3;
@@ -1058,6 +684,10 @@ pub const JVM_ITEM_Null: ::std::os::raw::c_uint = 5;
 pub const JVM_ITEM_UninitializedThis: ::std::os::raw::c_uint = 6;
 pub const JVM_ITEM_Object: ::std::os::raw::c_uint = 7;
 pub const JVM_ITEM_Uninitialized: ::std::os::raw::c_uint = 8;
+pub const JVM_SIGNATURE_SLASH: ::std::os::raw::c_uint = 47;
+pub const JVM_SIGNATURE_DOT: ::std::os::raw::c_uint = 46;
+pub const JVM_SIGNATURE_SPECIAL: ::std::os::raw::c_uint = 60;
+pub const JVM_SIGNATURE_ENDSPECIAL: ::std::os::raw::c_uint = 62;
 pub const JVM_SIGNATURE_ARRAY: ::std::os::raw::c_uint = 91;
 pub const JVM_SIGNATURE_BYTE: ::std::os::raw::c_uint = 66;
 pub const JVM_SIGNATURE_CHAR: ::std::os::raw::c_uint = 67;
@@ -1276,16 +906,6 @@ pub const JVM_OPC_ifnonnull: ::std::os::raw::c_uint = 199;
 pub const JVM_OPC_goto_w: ::std::os::raw::c_uint = 200;
 pub const JVM_OPC_jsr_w: ::std::os::raw::c_uint = 201;
 pub const JVM_OPC_MAX: ::std::os::raw::c_uint = 201;
-
-pub type verifier_fn_t = ::std::option::Option<
-	unsafe extern "C" fn(
-		env: *mut JNIEnv,
-		cb: jclass,
-		msg_buf: *mut ::std::os::raw::c_char,
-		buf_len: jint,
-	) -> jboolean,
->;
-
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct method_size_info {
@@ -1295,7 +915,6 @@ pub struct method_size_info {
 	pub lnum: ::std::os::raw::c_ulong,
 	pub lvar: ::std::os::raw::c_ulong,
 }
-
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct class_size_info {
@@ -1308,483 +927,18 @@ pub struct class_size_info {
 	pub clinit: method_size_info,
 	pub main: method_size_info,
 }
-
-pub type to_java_string_fn_t = ::std::option::Option<
-	unsafe extern "C" fn(env: *mut JNIEnv, str_: *mut ::std::os::raw::c_char) -> jstring,
->;
-pub type to_c_string_fn_t = ::std::option::Option<
-	unsafe extern "C" fn(
-		env: *mut JNIEnv,
-		s: jstring,
-		b: *mut jboolean,
-	) -> *mut ::std::os::raw::c_char,
->;
-pub type check_format_fn_t = ::std::option::Option<
-	unsafe extern "C" fn(
-		class_name: *mut ::std::os::raw::c_char,
-		data: *mut ::std::os::raw::c_uchar,
-		data_size: ::std::os::raw::c_uint,
-		class_size: *mut class_size_info,
-		message_buffer: *mut ::std::os::raw::c_char,
-		buffer_length: jint,
-		measure_only: jboolean,
-		check_relaxed: jboolean,
-	) -> jint,
->;
-pub type canonicalize_fn_t = ::std::option::Option<
-	unsafe extern "C" fn(
-		env: *mut JNIEnv,
-		orig: *mut ::std::os::raw::c_char,
-		out: *mut ::std::os::raw::c_char,
-		len: ::std::os::raw::c_int,
-	) -> ::std::os::raw::c_int,
->;
-
 extern "C" {
-	pub fn JVM_GetLastErrorString(
-		buf: *mut ::std::os::raw::c_char,
-		len: ::std::os::raw::c_int,
-	) -> jint;
-}
-
-extern "C" {
+	#[doc = "PART 3: I/O and Network Support"]
 	pub fn JVM_NativePath(arg1: *mut ::std::os::raw::c_char) -> *mut ::std::os::raw::c_char;
 }
-
-extern "C" {
-	pub fn JVM_Open(fname: *const ::std::os::raw::c_char, flags: jint, mode: jint) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_Close(fd: jint) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_Read(fd: jint, buf: *mut ::std::os::raw::c_char, nbytes: jint) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_Write(fd: jint, buf: *mut ::std::os::raw::c_char, nbytes: jint) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_Available(fd: jint, pbytes: *mut jlong) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_Lseek(fd: jint, offset: jlong, whence: jint) -> jlong;
-}
-
-extern "C" {
-	pub fn JVM_SetLength(fd: jint, length: jlong) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_Sync(fd: jint) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_InitializeSocketLibrary() -> jint;
-}
-
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct sockaddr {
-	_unused: [u8; 0],
-}
-
-extern "C" {
-	pub fn JVM_Socket(domain: jint, type_: jint, protocol: jint) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_SocketClose(fd: jint) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_SocketShutdown(fd: jint, howto: jint) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_Recv(fd: jint, buf: *mut ::std::os::raw::c_char, nBytes: jint, flags: jint) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_Send(fd: jint, buf: *mut ::std::os::raw::c_char, nBytes: jint, flags: jint) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_Timeout(fd: ::std::os::raw::c_int, timeout: ::std::os::raw::c_long) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_Listen(fd: jint, count: jint) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_Connect(fd: jint, him: *mut sockaddr, len: jint) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_Bind(fd: jint, him: *mut sockaddr, len: jint) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_Accept(fd: jint, him: *mut sockaddr, len: *mut jint) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_RecvFrom(
-		fd: jint,
-		buf: *mut ::std::os::raw::c_char,
-		nBytes: ::std::os::raw::c_int,
-		flags: ::std::os::raw::c_int,
-		from: *mut sockaddr,
-		fromlen: *mut ::std::os::raw::c_int,
-	) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_SendTo(
-		fd: jint,
-		buf: *mut ::std::os::raw::c_char,
-		len: ::std::os::raw::c_int,
-		flags: ::std::os::raw::c_int,
-		to: *mut sockaddr,
-		tolen: ::std::os::raw::c_int,
-	) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_SocketAvailable(fd: jint, result: *mut jint) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_GetSockName(fd: jint, him: *mut sockaddr, len: *mut ::std::os::raw::c_int) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_GetSockOpt(
-		fd: jint,
-		level: ::std::os::raw::c_int,
-		optname: ::std::os::raw::c_int,
-		optval: *mut ::std::os::raw::c_char,
-		optlen: *mut ::std::os::raw::c_int,
-	) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_SetSockOpt(
-		fd: jint,
-		level: ::std::os::raw::c_int,
-		optname: ::std::os::raw::c_int,
-		optval: *const ::std::os::raw::c_char,
-		optlen: ::std::os::raw::c_int,
-	) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_GetHostName(
-		name: *mut ::std::os::raw::c_char,
-		namelen: ::std::os::raw::c_int,
-	) -> ::std::os::raw::c_int;
-}
-
-extern "C" {
-	pub fn JVM_RawMonitorCreate() -> *mut ::std::os::raw::c_void;
-}
-
-extern "C" {
-	pub fn JVM_RawMonitorDestroy(mon: *mut ::std::os::raw::c_void);
-}
-
-extern "C" {
-	pub fn JVM_RawMonitorEnter(mon: *mut ::std::os::raw::c_void) -> jint;
-}
-
-extern "C" {
-	pub fn JVM_RawMonitorExit(mon: *mut ::std::os::raw::c_void);
-}
-
-extern "C" {
-	pub fn JVM_GetManagement(version: jint) -> *mut ::std::os::raw::c_void;
-}
-
-extern "C" {
-	pub fn JVM_InitAgentProperties(env: *mut JNIEnv, agent_props: jobject) -> jobject;
-}
-
-extern "C" {
-	pub fn JVM_GetTemporaryDirectory(env: *mut JNIEnv) -> jstring;
-}
-
-extern "C" {
-	pub fn JVM_GetEnclosingMethodInfo(env: *mut JNIEnv, ofClass: jclass) -> jobjectArray;
-}
-
-pub const JAVA_THREAD_STATE_NEW: ::std::os::raw::c_uint = 0;
-pub const JAVA_THREAD_STATE_RUNNABLE: ::std::os::raw::c_uint = 1;
-pub const JAVA_THREAD_STATE_BLOCKED: ::std::os::raw::c_uint = 2;
-pub const JAVA_THREAD_STATE_WAITING: ::std::os::raw::c_uint = 3;
-pub const JAVA_THREAD_STATE_TIMED_WAITING: ::std::os::raw::c_uint = 4;
-pub const JAVA_THREAD_STATE_TERMINATED: ::std::os::raw::c_uint = 5;
-pub const JAVA_THREAD_STATE_COUNT: ::std::os::raw::c_uint = 6;
-
-extern "C" {
-	pub fn JVM_GetThreadStateValues(env: *mut JNIEnv, javaThreadState: jint) -> jintArray;
-}
-
-extern "C" {
-	pub fn JVM_GetThreadStateNames(
-		env: *mut JNIEnv,
-		javaThreadState: jint,
-		values: jintArray,
-	) -> jobjectArray;
-}
-
-extern "C" {
-	pub fn JVM_KnownToNotExist(
-		env: *mut JNIEnv,
-		loader: jobject,
-		classname: *const ::std::os::raw::c_char,
-	) -> jboolean;
-}
-
-extern "C" {
-	pub fn JVM_GetResourceLookupCacheURLs(env: *mut JNIEnv, loader: jobject) -> jobjectArray;
-}
-
-extern "C" {
-	pub fn JVM_GetResourceLookupCache(
-		env: *mut JNIEnv,
-		loader: jobject,
-		resource_name: *const ::std::os::raw::c_char,
-	) -> jintArray;
-}
-
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct jvm_version_info {
-	pub jvm_version: ::std::os::raw::c_uint,
-	pub _bitfield_1: __BindgenBitfieldUnit<[u8; 4usize], u16>,
-	pub reserved2: ::std::os::raw::c_uint,
-	pub _bitfield_2: __BindgenBitfieldUnit<[u8; 12usize], u8>,
-}
-
-impl jvm_version_info {
-	#[inline]
-	pub fn update_version(&self) -> ::std::os::raw::c_uint {
-		unsafe { ::std::mem::transmute(self._bitfield_1.get(0usize, 8u8) as u32) }
-	}
-	#[inline]
-	pub fn set_update_version(&mut self, val: ::std::os::raw::c_uint) {
-		unsafe {
-			let val: u32 = ::std::mem::transmute(val);
-			self._bitfield_1.set(0usize, 8u8, val as u64)
-		}
-	}
-	#[inline]
-	pub fn special_update_version(&self) -> ::std::os::raw::c_uint {
-		unsafe { ::std::mem::transmute(self._bitfield_1.get(8usize, 8u8) as u32) }
-	}
-	#[inline]
-	pub fn set_special_update_version(&mut self, val: ::std::os::raw::c_uint) {
-		unsafe {
-			let val: u32 = ::std::mem::transmute(val);
-			self._bitfield_1.set(8usize, 8u8, val as u64)
-		}
-	}
-	#[inline]
-	pub fn reserved1(&self) -> ::std::os::raw::c_uint {
-		unsafe { ::std::mem::transmute(self._bitfield_1.get(16usize, 16u8) as u32) }
-	}
-	#[inline]
-	pub fn set_reserved1(&mut self, val: ::std::os::raw::c_uint) {
-		unsafe {
-			let val: u32 = ::std::mem::transmute(val);
-			self._bitfield_1.set(16usize, 16u8, val as u64)
-		}
-	}
-	#[inline]
-	pub fn new_bitfield_1(
-		update_version: ::std::os::raw::c_uint,
-		special_update_version: ::std::os::raw::c_uint,
-		reserved1: ::std::os::raw::c_uint,
-	) -> __BindgenBitfieldUnit<[u8; 4usize], u16> {
-		let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize], u16> =
-			Default::default();
-		__bindgen_bitfield_unit.set(0usize, 8u8, {
-			let update_version: u32 = unsafe { ::std::mem::transmute(update_version) };
-			update_version as u64
-		});
-		__bindgen_bitfield_unit.set(8usize, 8u8, {
-			let special_update_version: u32 =
-				unsafe { ::std::mem::transmute(special_update_version) };
-			special_update_version as u64
-		});
-		__bindgen_bitfield_unit.set(16usize, 16u8, {
-			let reserved1: u32 = unsafe { ::std::mem::transmute(reserved1) };
-			reserved1 as u64
-		});
-		__bindgen_bitfield_unit
-	}
-	#[inline]
-	pub fn is_attach_supported(&self) -> ::std::os::raw::c_uint {
-		unsafe { ::std::mem::transmute(self._bitfield_2.get(0usize, 1u8) as u32) }
-	}
-	#[inline]
-	pub fn set_is_attach_supported(&mut self, val: ::std::os::raw::c_uint) {
-		unsafe {
-			let val: u32 = ::std::mem::transmute(val);
-			self._bitfield_2.set(0usize, 1u8, val as u64)
-		}
-	}
-	#[inline]
-	pub fn new_bitfield_2(
-		is_attach_supported: ::std::os::raw::c_uint,
-	) -> __BindgenBitfieldUnit<[u8; 12usize], u8> {
-		let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 12usize], u8> =
-			Default::default();
-		__bindgen_bitfield_unit.set(0usize, 1u8, {
-			let is_attach_supported: u32 = unsafe { ::std::mem::transmute(is_attach_supported) };
-			is_attach_supported as u64
-		});
-		__bindgen_bitfield_unit
-	}
-}
-
-extern "C" {
-	pub fn JVM_GetVersionInfo(env: *mut JNIEnv, info: *mut jvm_version_info, info_size: size_t);
-}
-
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct jdk_version_info {
-	pub jdk_version: ::std::os::raw::c_uint,
-	pub _bitfield_1: __BindgenBitfieldUnit<[u8; 4usize], u16>,
-	pub reserved2: ::std::os::raw::c_uint,
-	pub _bitfield_2: __BindgenBitfieldUnit<[u8; 12usize], u8>,
-}
-
-impl jdk_version_info {
-	#[inline]
-	pub fn update_version(&self) -> ::std::os::raw::c_uint {
-		unsafe { ::std::mem::transmute(self._bitfield_1.get(0usize, 8u8) as u32) }
-	}
-	#[inline]
-	pub fn set_update_version(&mut self, val: ::std::os::raw::c_uint) {
-		unsafe {
-			let val: u32 = ::std::mem::transmute(val);
-			self._bitfield_1.set(0usize, 8u8, val as u64)
-		}
-	}
-	#[inline]
-	pub fn special_update_version(&self) -> ::std::os::raw::c_uint {
-		unsafe { ::std::mem::transmute(self._bitfield_1.get(8usize, 8u8) as u32) }
-	}
-	#[inline]
-	pub fn set_special_update_version(&mut self, val: ::std::os::raw::c_uint) {
-		unsafe {
-			let val: u32 = ::std::mem::transmute(val);
-			self._bitfield_1.set(8usize, 8u8, val as u64)
-		}
-	}
-	#[inline]
-	pub fn reserved1(&self) -> ::std::os::raw::c_uint {
-		unsafe { ::std::mem::transmute(self._bitfield_1.get(16usize, 16u8) as u32) }
-	}
-	#[inline]
-	pub fn set_reserved1(&mut self, val: ::std::os::raw::c_uint) {
-		unsafe {
-			let val: u32 = ::std::mem::transmute(val);
-			self._bitfield_1.set(16usize, 16u8, val as u64)
-		}
-	}
-	#[inline]
-	pub fn new_bitfield_1(
-		update_version: ::std::os::raw::c_uint,
-		special_update_version: ::std::os::raw::c_uint,
-		reserved1: ::std::os::raw::c_uint,
-	) -> __BindgenBitfieldUnit<[u8; 4usize], u16> {
-		let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize], u16> =
-			Default::default();
-		__bindgen_bitfield_unit.set(0usize, 8u8, {
-			let update_version: u32 = unsafe { ::std::mem::transmute(update_version) };
-			update_version as u64
-		});
-		__bindgen_bitfield_unit.set(8usize, 8u8, {
-			let special_update_version: u32 =
-				unsafe { ::std::mem::transmute(special_update_version) };
-			special_update_version as u64
-		});
-		__bindgen_bitfield_unit.set(16usize, 16u8, {
-			let reserved1: u32 = unsafe { ::std::mem::transmute(reserved1) };
-			reserved1 as u64
-		});
-		__bindgen_bitfield_unit
-	}
-	#[inline]
-	pub fn thread_park_blocker(&self) -> ::std::os::raw::c_uint {
-		unsafe { ::std::mem::transmute(self._bitfield_2.get(0usize, 1u8) as u32) }
-	}
-	#[inline]
-	pub fn set_thread_park_blocker(&mut self, val: ::std::os::raw::c_uint) {
-		unsafe {
-			let val: u32 = ::std::mem::transmute(val);
-			self._bitfield_2.set(0usize, 1u8, val as u64)
-		}
-	}
-	#[inline]
-	pub fn post_vm_init_hook_enabled(&self) -> ::std::os::raw::c_uint {
-		unsafe { ::std::mem::transmute(self._bitfield_2.get(1usize, 1u8) as u32) }
-	}
-	#[inline]
-	pub fn set_post_vm_init_hook_enabled(&mut self, val: ::std::os::raw::c_uint) {
-		unsafe {
-			let val: u32 = ::std::mem::transmute(val);
-			self._bitfield_2.set(1usize, 1u8, val as u64)
-		}
-	}
-	#[inline]
-	pub fn pending_list_uses_discovered_field(&self) -> ::std::os::raw::c_uint {
-		unsafe { ::std::mem::transmute(self._bitfield_2.get(2usize, 1u8) as u32) }
-	}
-	#[inline]
-	pub fn set_pending_list_uses_discovered_field(&mut self, val: ::std::os::raw::c_uint) {
-		unsafe {
-			let val: u32 = ::std::mem::transmute(val);
-			self._bitfield_2.set(2usize, 1u8, val as u64)
-		}
-	}
-	#[inline]
-	pub fn new_bitfield_2(
-		thread_park_blocker: ::std::os::raw::c_uint,
-		post_vm_init_hook_enabled: ::std::os::raw::c_uint,
-		pending_list_uses_discovered_field: ::std::os::raw::c_uint,
-	) -> __BindgenBitfieldUnit<[u8; 12usize], u8> {
-		let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 12usize], u8> =
-			Default::default();
-		__bindgen_bitfield_unit.set(0usize, 1u8, {
-			let thread_park_blocker: u32 = unsafe { ::std::mem::transmute(thread_park_blocker) };
-			thread_park_blocker as u64
-		});
-		__bindgen_bitfield_unit.set(1usize, 1u8, {
-			let post_vm_init_hook_enabled: u32 =
-				unsafe { ::std::mem::transmute(post_vm_init_hook_enabled) };
-			post_vm_init_hook_enabled as u64
-		});
-		__bindgen_bitfield_unit.set(2usize, 1u8, {
-			let pending_list_uses_discovered_field: u32 =
-				unsafe { ::std::mem::transmute(pending_list_uses_discovered_field) };
-			pending_list_uses_discovered_field as u64
-		});
-		__bindgen_bitfield_unit
-	}
-}
-
-pub type jdk_version_info_fn_t =
-::std::option::Option<unsafe extern "C" fn(info: *mut jdk_version_info, info_size: size_t)>;
-
+pub static JVM_RawMonitorCreate: Weak<fn() -> *mut ::std::os::raw::c_void> = Weak::new("JVM_RawMonitorCreate");
+pub static JVM_RawMonitorDestroy: Weak<fn(mon: *mut ::std::os::raw::c_void)> = Weak::new("JVM_RawMonitorDestroy");
+pub static JVM_RawMonitorEnter: Weak<fn(mon: *mut ::std::os::raw::c_void) -> jint> = Weak::new("JVM_RawMonitorEnter");
+pub static JVM_RawMonitorExit: Weak<fn(mon: *mut ::std::os::raw::c_void)> = Weak::new("JVM_RawMonitorExit");
+pub static JVM_GetManagement: Weak<fn(version: jint) -> *mut ::std::os::raw::c_void> = Weak::new("JVM_GetManagement");
+pub static JVM_InitAgentProperties: Weak<fn(env: *mut JNIEnv, agent_props: jobject) -> jobject> = Weak::new("JVM_InitAgentProperties");
+pub static JVM_GetTemporaryDirectory: Weak<fn(env: *mut JNIEnv) -> jstring> = Weak::new("JVM_GetTemporaryDirectory");
+pub static JVM_GetEnclosingMethodInfo: Weak<fn(env: *mut JNIEnv, ofClass: jclass) -> jobjectArray> = Weak::new("JVM_GetEnclosingMethodInfo");
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct JDK1_1InitArgs {
@@ -1812,15 +966,4 @@ pub struct JDK1_1InitArgs {
 	pub verbose: jint,
 	pub debugging: jboolean,
 	pub debugPort: jint,
-}
-
-pub type __builtin_va_list = [__va_list_tag; 1usize];
-
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct __va_list_tag {
-	pub gp_offset: ::std::os::raw::c_uint,
-	pub fp_offset: ::std::os::raw::c_uint,
-	pub overflow_arg_area: *mut ::std::os::raw::c_void,
-	pub reg_save_area: *mut ::std::os::raw::c_void,
 }

@@ -1,7 +1,13 @@
-pub mod bitfield;
-pub mod misctypes;
-pub mod jvm;
+mod bitfield;
+pub mod weak;
+pub mod varargs;
+
+pub mod classfile_constants;
+pub mod jawt;
+pub mod jdwpTransport;
+pub mod jmm;
 pub mod jni;
+pub mod jvm;
 pub mod jvmti;
-pub mod jmm; 
-pub mod utils;
+pub mod jvmticmlr;
+

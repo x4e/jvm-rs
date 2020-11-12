@@ -4,14 +4,12 @@ pub struct __BindgenBitfieldUnit<Storage, Align> {
 	storage: Storage,
 	align: [Align; 0],
 }
-
 impl<Storage, Align> __BindgenBitfieldUnit<Storage, Align> {
 	#[inline]
 	pub const fn new(storage: Storage) -> Self {
 		Self { storage, align: [] }
 	}
 }
-
 impl<Storage, Align> __BindgenBitfieldUnit<Storage, Align>
 	where
 		Storage: AsRef<[u8]> + AsMut<[u8]>,
