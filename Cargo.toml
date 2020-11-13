@@ -6,7 +6,6 @@ repository = "https://github.com/x4e/rs-jvm-bindings"
 version = "0.1.0"
 authors = ["x4e <x4e_x4e@protonmail.com>"]
 edition = "2018"
-license = "GPL-3.0-only"
 license-file = "LICENSE"
 readme = "README.md"
 keywords = ["jvm", "java", "bindings", "jawt", "jdwp", "jmm", "jni", "jvmti"]
