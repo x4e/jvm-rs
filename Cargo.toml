@@ -8,7 +8,7 @@ authors = ["x4e <x4e_x4e@protonmail.com>"]
 edition = "2018"
 license-file = "LICENSE"
 readme = "README.md"
-keywords = ["jvm", "java", "bindings", "jawt", "jdwp", "jmm", "jni", "jvmti"]
+keywords = ["jvm", "java", "jmm", "jni", "jvmti"]
 categories = ["external-ffi-bindings"]
 
 [dependencies]
