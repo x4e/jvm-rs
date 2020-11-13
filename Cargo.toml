@@ -1,7 +1,15 @@
 [package]
-name = "rs-jvm-bindings"
+name = "jvm-rs"
+description = "Bindings for the JVM and its interfaces"
+homepage = "https://github.com/x4e/rs-jvm-bindings"
+repository = "https://github.com/x4e/rs-jvm-bindings"
 version = "0.1.0"
-authors = ["mastercooker <c.o.okiedragon234@gmail.com>"]
+authors = ["x4e <x4e_x4e@protonmail.com>"]
 edition = "2018"
+license = "GPL-3.0-only"
+license-file = "LICENSE"
+readme = "README.md"
+keywords = ["jvm", "java", "bindings", "jawt", "jdwp", "jmm", "jni", "jvmti"]
+categories = ["external-ffi-bindings"]
 
 [dependencies]
