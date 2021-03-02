@@ -57,6 +57,6 @@ unsafe fn find_symbol(name: *const c_char) -> usize {
 #[cfg(windows)]
 unsafe fn find_symbol(name: *const c_char) -> usize {
 	use std::ptr::null;
-	use kernel32::{GetModuleHandle, GetProcAddress};
+	use winapi::um::libloaderapi::{GetModuleHandleA, GetProcAddress};
 	GetProcAddress(GetModuleHandleA(null()), name) as usize
 }

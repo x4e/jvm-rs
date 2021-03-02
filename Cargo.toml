@@ -12,3 +12,6 @@ keywords = ["jvm", "java", "jmm", "jni", "jvmti"]
 categories = ["external-ffi-bindings"]
 
 [dependencies]
+
+[target.'cfg(windows)'.dependencies]
+winapi = { version = "0.3.9", features = ["libloaderapi"] }
