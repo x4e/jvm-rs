@@ -1,10 +1,19 @@
-# rs-jvm-bindings
+# jvm-rs
 
 JVM bindings for rust.
 
 Currently bound to JVM 15.
 
 Generated with `bindgen --no-layout-tests`
+
+## Usage
+
+Add to Cargo.toml
+```toml
+jvm-rs = "0.1.0"
+```
+
+Follow documentation: https://docs.rs/jvm-rs/0.1.0/jvm_rs/
 
 ## Interfaces this supports
 * [classfile_constants](https://github.com/openjdk/jdk/blob/jdk-16+24/src/java.base/share/native/include/classfile_constants.h.template)
